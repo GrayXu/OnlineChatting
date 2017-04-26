@@ -15,9 +15,9 @@ public class ServerListener extends Thread {
 			while (true) {
 				Socket socket = serverSocket.accept();
 				JOptionPane.showMessageDialog(null, "COM connect us with 12345 port");
-				ChatSocket cs = new ChatSocket(socket);
-				ChatManager.getChatManager().add(cs);
-				cs.start();
+				Chat c = new Chat(socket);
+				Manager.getChatManager().add(c);
+				c.start();
 			}
 
 		} catch (IOException e) {
