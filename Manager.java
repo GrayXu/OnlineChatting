@@ -13,7 +13,6 @@ public class Manager {
 		return M;
 	}
 
-
 	public void add(Chat c) {
 		csVector.add(c);
 	}
@@ -22,16 +21,10 @@ public class Manager {
 		csVector.remove(c);
 	}
 
-	public int getUserID(Chat c) {
-		return csVector.indexOf(c);
-	}
-
-	public void publish(Chat c, String out) {
+	public void publish(String out) {
 		for (int i = 0; i < csVector.size(); i++) {
 			Chat csChatSocket = csVector.get(i);
-			if (!c.equals(csChatSocket)) {
-				csChatSocket.out("User " + csVector.indexOf(c) + " : " + out);
-			}
+			csChatSocket.out(out);
 		}
 	}
 }
