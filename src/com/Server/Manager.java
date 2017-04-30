@@ -1,4 +1,4 @@
-package com.Chat;
+package com.Server;
 
 import java.util.Vector;
 

@@ -1,4 +1,4 @@
-package com.Chat;
+package com.Server;
 
 /**
  * For test!

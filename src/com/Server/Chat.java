@@ -1,4 +1,4 @@
-package com.Chat;
+package com.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,12 +31,11 @@ public class Chat extends Thread {
 		try {
 			PrintStream ps = new PrintStream(socket.getOutputStream());
 			ps.println(out);
-			ps.close();
 
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("break connection(IO in Out Method)");
+			System.out.println("break connection(IO in “Out” Method)");
 			Manager.getChatManager().remove(this);
 			e.printStackTrace();
 		}
@@ -47,15 +46,17 @@ public class Chat extends Thread {
 	 */
 	@Override
 	public void run() {
+		out("Connect Successfully!");
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+			BufferedReader br = new BufferedReader(
+					new InputStreamReader(
+							socket.getInputStream(), "UTF-8"));
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				System.out.println(line);
 				Manager.getChatManager().publish(line);
 			}
 			br.close();
-
 			System.out.println("break connection(br.close)");
 			Manager.getChatManager().remove(this);
 			
