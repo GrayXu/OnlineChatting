@@ -12,16 +12,21 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JScrollPane;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 /**
  * OnlineChatting Client GUI
  * @author Gray
  * @MemberVar  		dialog 	   ->Dialog to input username and IP address<br />
  * 					field  	   ->TextField in Dialog<br />
- * 					txtrOut	   ->Output TextArea(muti lines)<br />
- * 					txtrOIn	   ->Input TextArea(muti lines)<br />
+ * 					textAreaGet	   ->MessageGet TextArea(muti lines)<br />
+ * 					textAreaOut	   ->MessageOutput TextArea(muti lines)<br />
  * 					Others	   ->Literally
  */
 public class Client extends JFrame {
@@ -33,8 +38,8 @@ public class Client extends JFrame {
     private JTextField field;
     private Net net;
     private String IPaddr;
-    private JTextArea txtrOut;
-    private JTextArea txtrIn;
+    private JTextArea textAreaGet;
+    private JTextArea textAreaOut;
 //    private MessageUpdater mu;
     
     //Use regex to confirm the format of IP is correct.
@@ -47,6 +52,7 @@ public class Client extends JFrame {
      * Constructors. Get dimension to make setting component center convient.
      */
 	public Client() {
+    	
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();//Get dimension
     	screenWidth = dim.width;
     	screenHeight = dim.height;
@@ -57,7 +63,7 @@ public class Client extends JFrame {
 	 * @param str A string to output
 	 */
 	public void updateMessage(String str){
-		txtrOut.append("\n" + str);
+		textAreaGet.append("\n" + str);
 	}
 	
 	/**
@@ -127,39 +133,70 @@ public class Client extends JFrame {
 	 * Create the frame.
 	 */
 	public void mainPattern(){
-		
 		net = new Net(name,IPaddr,this);
-	//Publish textarea 	
-		txtrOut = new JTextArea();
-		txtrIn = new JTextArea();
-		txtrOut.setEditable(false);
-		txtrOut.setFont(new Font("Microsoft YaHei UI Light", Font.PLAIN, 13));//set fonts
-		txtrOut.setText("Welcome to this CHAT, "+name);
-		txtrOut.setBounds(0, 15, 428, 148);
-		getContentPane().add(txtrOut);
-	//Start to listen new message, initialize input and output stream.
-		net.getMessage();
-		
-	//Send message to service
-		JButton btnNewButton = new JButton("Sent");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				net.sendMessage(txtrIn.getText());//In the meantime, net's stream initialize.
-				txtrIn.setText("");
-			}
-		});
-		btnNewButton.setBounds(320, 200, 108, 29);
-		getContentPane().add(btnNewButton);
-	//Textarea to send message 
-		txtrIn.setFont(new Font("Microsoft JhengHei UI Light", Font.PLAIN, 13));
-		txtrIn.setText("Type in your message!");
-		txtrIn.setBounds(0, 189, 305, 55);
-		getContentPane().add(txtrIn);
-	//sent center and pack
-		this.setLocation((screenWidth-this.getWidth())/2,(screenHeight-this.getHeight())/2);
-		this.setVisible(true);	
-		setResizable(false);
-		this.setTitle("OnlineChatting--Powered By Gray");
+    	JScrollPane scrollPaneGet = new JScrollPane();
+    	JScrollPane scrollPaneOut = new JScrollPane();
+    	
+    	//Send message to service
+    	JButton btnNewButton = new JButton("Send");
+    	btnNewButton.addActionListener(new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			String strOut = textAreaOut.getText();
+    			if(strOut.equals("")){
+    				JOptionPane.showMessageDialog(null, "输入不能为空");
+    			}else{
+    				net.sendMessage(strOut);//In the meantime, net's stream initialize.
+    				textAreaOut.setText("");
+    			}
+    		}
+    	});
+    	
+    	//Auto layout setting.
+    	GroupLayout groupLayout = new GroupLayout(getContentPane());
+    	groupLayout.setHorizontalGroup(
+    		groupLayout.createParallelGroup(Alignment.TRAILING)
+    			.addGroup(groupLayout.createSequentialGroup()
+    				.addContainerGap()
+    				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+    					.addComponent(scrollPaneGet, GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+    					.addGroup(groupLayout.createSequentialGroup()
+    						.addComponent(scrollPaneOut, GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+    						.addPreferredGap(ComponentPlacement.RELATED)
+    						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE)))
+    				.addContainerGap())
+    	);
+    	groupLayout.setVerticalGroup(
+    		groupLayout.createParallelGroup(Alignment.TRAILING)
+    			.addGroup(groupLayout.createSequentialGroup()
+    				.addContainerGap()
+    				.addComponent(scrollPaneGet, GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+    				.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+    					.addGroup(groupLayout.createSequentialGroup()
+    						.addGap(23)
+    						.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+    					.addGroup(groupLayout.createSequentialGroup()
+    						.addPreferredGap(ComponentPlacement.RELATED)
+    						.addComponent(scrollPaneOut, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE)))
+    				.addContainerGap())
+    	);
+    	
+    	//Publish textarea 	
+    	textAreaGet = new JTextArea();
+    	textAreaGet.setText("Welcome to Gray's Chatting Room!");
+    	textAreaGet.setFont(new Font("Microsoft YaHei UI Light", Font.PLAIN, 13));
+    	scrollPaneGet.setViewportView(textAreaGet);
+    	textAreaGet.setEditable(false);
+    	
+    	//Start to listen new message, initialize input and output stream.
+    	net.getMessage();
+    	
+    	//Textarea to send message 
+    	textAreaOut = new JTextArea();
+    	textAreaOut.setFont(new Font("Microsoft YaHei UI Light", Font.PLAIN, 13));
+    	scrollPaneOut.setViewportView(textAreaOut);
+    	getContentPane().setLayout(groupLayout);
+    	this.setTitle("OnlineChatting--Powered By Gray");
+    	setVisible(true);
 	}
 
 	/**
