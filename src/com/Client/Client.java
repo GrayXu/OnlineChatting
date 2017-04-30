@@ -19,6 +19,14 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JScrollPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.SwingConstants;
+import javax.swing.JMenu;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * OnlineChatting Client GUI
@@ -138,7 +146,7 @@ public class Client extends JFrame {
     	JScrollPane scrollPaneOut = new JScrollPane();
     	
     	//Send message to service
-    	JButton btnNewButton = new JButton("Send");
+    	JButton btnNewButton = new JButton("OK");
     	btnNewButton.addActionListener(new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
     			String strOut = textAreaOut.getText();
@@ -182,7 +190,7 @@ public class Client extends JFrame {
     	
     	//Publish textarea 	
     	textAreaGet = new JTextArea();
-    	textAreaGet.setText("Welcome to Gray's Chatting Room!");
+    	textAreaGet.setText("Welcome to Gray's Chatting Room, " + name + "!");
     	textAreaGet.setFont(new Font("Microsoft YaHei UI Light", Font.PLAIN, 13));
     	scrollPaneGet.setViewportView(textAreaGet);
     	textAreaGet.setEditable(false);
@@ -192,10 +200,31 @@ public class Client extends JFrame {
     	
     	//Textarea to send message 
     	textAreaOut = new JTextArea();
+    	textAreaOut.addKeyListener(new KeyAdapter() {
+    		public void keyPressed(KeyEvent e) {
+    			
+    		}
+    	});
     	textAreaOut.setFont(new Font("Microsoft YaHei UI Light", Font.PLAIN, 13));
     	scrollPaneOut.setViewportView(textAreaOut);
     	getContentPane().setLayout(groupLayout);
-    	this.setTitle("OnlineChatting--Powered By Gray");
+    	this.setTitle("OnlineChatting");
+    	
+    	JMenuBar menuBar = new JMenuBar();
+    	setJMenuBar(menuBar);
+    	
+    	JMenu mnNewMenu = new JMenu("Menu");
+    	menuBar.add(mnNewMenu);
+    	
+    	JMenuItem menuItem = new JMenuItem("Author");
+    	menuItem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JOptionPane.showMessageDialog(null, "Powered By Gray Xu");
+			}
+		});
+    	mnNewMenu.add(menuItem);
     	setVisible(true);
 	}
 

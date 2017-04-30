@@ -65,7 +65,7 @@ public class Chat extends Thread {
 		} catch (IOException e) {
 			System.out.println("break connection(IOException,can't get InputStream)");
 			Manager.getChatManager().remove(this);
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 	}
