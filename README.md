@@ -1,2 +1,4 @@
 # OnlineChatting
-Java\Socket\Demo
+Java/Socket/Demo
+A simple chatting room software.
+Just for pratice.
